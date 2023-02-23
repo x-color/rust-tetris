@@ -27,13 +27,12 @@ fn main() {
                 x: game.pos.x,
                 y: game.pos.y + 1,
             };
-            if !game::is_collision(&game.field, &new_pos, game.block) {
+            if !game::is_collision(&game.field, &new_pos, &game.block) {
                 game.pos = new_pos;
             } else {
-                game::fix_block(&mut game);
-                game::erase_line(&mut game.field);
-                game.pos = Position::init();
-                game.block = rand::random();
+                if game::landing(&mut game).is_err() {
+                    game::gameover(&game);
+                }
             }
             game::draw(&game);
         });
@@ -68,9 +67,27 @@ fn main() {
                 game::move_block(&mut game, new_pos);
                 game::draw(&game);
             }
+            Ok(Key::Up) => {
+                let mut game = game.lock().unwrap();
+                game::hard_drop(&mut game);
+                if game::landing(&mut game).is_err() {
+                    // ブロックを生成できないならゲームオーバー
+                    game::gameover(&game);
+                }
+                game::draw(&game);
+            }
+            Ok(Key::Char('x')) => {
+                let mut game = game.lock().unwrap();
+                game::rotate_right(&mut game);
+                game::draw(&game);
+            }
+            Ok(Key::Char('z')) => {
+                let mut game = game.lock().unwrap();
+                game::rotate_left(&mut game);
+                game::draw(&game);
+            }
             Ok(Key::Char('q')) => {
-                println!("\x1b[?25h");
-                return;
+                game::quit();
             }
             _ => (),
         }
