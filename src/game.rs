@@ -1,9 +1,9 @@
-use crate::block::{block_kind, block_kind::WALL as W, BlockColor, COLOR_TABLE};
+use crate::block::tile::{self, TileColor, COLOR_TABLE, WALL as W};
 use crate::block::{BlockKind, BlockShape, BLOCKS};
 
 pub const FIELD_WIDTH: usize = 11 + 2;
 pub const FIELD_HEIGHT: usize = 20 + 1;
-pub type Field = [[BlockColor; FIELD_WIDTH]; FIELD_HEIGHT];
+pub type Field = [[TileColor; FIELD_WIDTH]; FIELD_HEIGHT];
 
 #[derive(Clone, Copy)]
 pub struct Position {
@@ -61,7 +61,7 @@ pub fn is_collision(field: &Field, pos: &Position, block: &BlockShape) -> bool {
             if y + pos.y >= FIELD_HEIGHT || x + pos.x >= FIELD_WIDTH {
                 continue;
             }
-            if block[y][x] != block_kind::NONE && field[y + pos.y][x + pos.x] != block_kind::NONE {
+            if block[y][x] != tile::NONE && field[y + pos.y][x + pos.x] != tile::NONE {
                 return true;
             }
         }
@@ -72,7 +72,7 @@ pub fn is_collision(field: &Field, pos: &Position, block: &BlockShape) -> bool {
 pub fn fix_block(Game { field, pos, block }: &mut Game) {
     for y in 0..4 {
         for x in 0..4 {
-            if block[y][x] != block_kind::NONE {
+            if block[y][x] != tile::NONE {
                 field[y + pos.y][x + pos.x] = block[y][x];
             }
         }
@@ -212,14 +212,14 @@ pub fn draw(Game { field, pos, block }: &Game) {
     let ghost_pos = ghost_pos(field, pos, block);
     for y in 0..4 {
         for x in 0..4 {
-            if block[y][x] != block_kind::NONE {
-                field_buf[y + ghost_pos.y][x + ghost_pos.x] = block_kind::GHOST;
+            if block[y][x] != tile::NONE {
+                field_buf[y + ghost_pos.y][x + ghost_pos.x] = tile::GHOST;
             }
         }
     }
     for y in 0..4 {
         for x in 0..4 {
-            if block[y][x] != block_kind::NONE {
+            if block[y][x] != tile::NONE {
                 field_buf[y + pos.y][x + pos.x] = block[y][x];
             }
         }

@@ -1,36 +1,34 @@
-use block_kind::{I, J, L, O, S, T, Z};
 use rand::{
     distributions::{Distribution, Standard},
     Rng,
 };
+use tile::{I, J, L, O, S, T, Z};
 
-pub type BlockColor = usize;
-
-pub mod block_kind {
-    pub const NONE: super::BlockColor = 0;
-    pub const WALL: super::BlockColor = 1;
-    pub const GHOST: super::BlockColor = 2;
-    pub const I: super::BlockColor = 3;
-    pub const O: super::BlockColor = 4;
-    pub const S: super::BlockColor = 5;
-    pub const Z: super::BlockColor = 6;
-    pub const J: super::BlockColor = 7;
-    pub const L: super::BlockColor = 8;
-    pub const T: super::BlockColor = 9;
+pub mod tile {
+    pub type TileColor = usize;
+    pub const NONE: TileColor = 0;
+    pub const WALL: TileColor = 1;
+    pub const GHOST: TileColor = 2;
+    pub const I: TileColor = 3;
+    pub const O: TileColor = 4;
+    pub const S: TileColor = 5;
+    pub const Z: TileColor = 6;
+    pub const J: TileColor = 7;
+    pub const L: TileColor = 8;
+    pub const T: TileColor = 9;
+    pub const COLOR_TABLE: [&str; 10] = [
+        "\x1b[48;2;000;000;000m  ", // NONE
+        "\x1b[48;2;127;127;127m  ", // WALL
+        "\x1b[48;2;000;000;000m[]", // GHOST
+        "\x1b[48;2;000;000;255m  ", // I
+        "\x1b[48;2;000;255;000m  ", // O
+        "\x1b[48;2;000;255;255m  ", // S
+        "\x1b[48;2;255;000;000m  ", // Z
+        "\x1b[48;2;255;000;255m  ", // J
+        "\x1b[48;2;255;127;000m  ", // L
+        "\x1b[48;2;255;255;000m  ", // T
+    ];
 }
-
-pub const COLOR_TABLE: [&str; 10] = [
-    "\x1b[48;2;000;000;000m  ", // 何もなし
-    "\x1b[48;2;127;127;127m  ", // 壁
-    "\x1b[48;2;000;000;000m[]", // ゴースト
-    "\x1b[48;2;000;000;255m  ", // I
-    "\x1b[48;2;000;255;000m  ", // O
-    "\x1b[48;2;000;255;255m  ", // S
-    "\x1b[48;2;255;000;000m  ", // Z
-    "\x1b[48;2;255;000;255m  ", // J
-    "\x1b[48;2;255;127;000m  ", // L
-    "\x1b[48;2;255;255;000m  ", // T
-];
 
 #[derive(Clone, Copy)]
 pub enum BlockKind {
